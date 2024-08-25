@@ -39,18 +39,23 @@ export function PhotoBooth() {
       const context = canvas.getContext("2d");
       const aspectRatio = video.videoWidth / video.videoHeight;
       const width = 600;
-      const height = (Math.floor((width / aspectRatio) / 8)) * 8;
+      const height = Math.floor(width / aspectRatio / 8) * 8;
       console.log(height);
       // Set canvas dimensions to match video stream
       canvas.width = width;
       canvas.height = height;
 
+      if (!context || !video) {
+        return;
+      }
       // Draw video frame onto canvas
       context.drawImage(video, 0, 0, width, height);
       // Brightne the canvas
       const imageData = context.getImageData(0, 0, width, height);
       for (let i = 0; i < imageData.data.length; i += 4) {
-        const brightness = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 2;
+        const brightness =
+          (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) /
+          2;
         imageData.data[i] = brightness;
         imageData.data[i + 1] = brightness;
         imageData.data[i + 2] = brightness;
@@ -91,7 +96,9 @@ export function PhotoBooth() {
       <canvas ref={canvasRef} className="hidden"></canvas>
       <div className="flex justify-center gap-2 m-2">
         <button onClick={startWebcam}>startWebcam</button>
-        <button onClick={captureImage}>{capturedImage ? 'Photo Printed!': 'Take Photo'}</button>
+        <button onClick={captureImage}>
+          {capturedImage ? "Photo Printed!" : "Take Photo"}
+        </button>
         {/* <button onClick={() => cutPaper()}>✂️ Cut</button> */}
       </div>
     </div>

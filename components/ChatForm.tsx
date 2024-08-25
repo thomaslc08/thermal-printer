@@ -4,7 +4,7 @@ import { printMessage } from "@/lib/chat";
 import { useActionState } from "react";
 
 export function ChatForm() {
-  const [state, formAction] = useActionState(printMessage, {});
+  const [state, formAction] = useActionState(printMessage as any, {});
   return (
     <form action={formAction}>
       <input
@@ -13,7 +13,6 @@ export function ChatForm() {
         name="name"
         required
         maxLength={25}
-        defaultValue={state.name || ""}
       />
       <input
         placeholder="Message. Be nice, AI will judge"
