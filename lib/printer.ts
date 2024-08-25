@@ -9,7 +9,7 @@ const printData = Buffer.from([
 ]);
 
 const PORT = 9100; // Most printers use port 9100
-const HOST = '192.168.1.87'; // The IP address of the printer, I got this by holding the feed button on the printer while turning it on
+const HOST = '192.168.1.42'; // The IP address of the printer, I got this by holding the feed button on the printer while turning it on
 
 
 const printerClientSingleton = () => {

@@ -1,8 +1,8 @@
 "use server";
-import { headers } from 'next/headers';
-import { checkSWF } from './sfw';
-import { client, encoder } from './printer';
-import { revalidatePath } from 'next/cache';
+import { headers } from "next/headers";
+import { checkSWF } from "./sfw";
+import { client, encoder } from "./printer";
+import { revalidatePath } from "next/cache";
 
 let count = 0;
 
@@ -19,17 +19,20 @@ export async function printMessage(prevState, data: FormData) {
   }
 
   rateLimit.set(ip, Date.now());
-  const message = (data.get("message") || '').slice(0, 50);
-  const screenName = (data.get("name") || '').slice(0, 25);
+  const message = (data.get("message") || "").slice(0, 50);
+  const screenName = (data.get("name") || "").slice(0, 25);
 
   console.log("Printing message", data.get("message"));
   let result = await checkSWF(message);
-  const printedMessage = result.score > 0.85 ? `REDACTED! Toxic score of ${Math.round(result.score * 100)}%` : message;
+  const printedMessage =
+    result.score > 0.85
+      ? `REDACTED! Toxic score of ${Math.round(result.score * 100)}%`
+      : message;
   if (result.score > 0.85) {
-    console.log('💀', result.score, message);
+    console.log("💀", result.score, message);
     return {
       body: printedMessage,
-    }
+    };
   }
   const encodedMessage = encoder
     .initialize()
@@ -40,11 +43,12 @@ export async function printMessage(prevState, data: FormData) {
     .bold(false)
     .text(` ${printedMessage}`)
     .newline()
+    .cut()
     .encode();
   client.write(encodedMessage);
   count++;
 
-  revalidatePath('/chat');
+  revalidatePath("/chat");
   return {
     body: `Printed message: ${printedMessage}`,
     name: screenName,
